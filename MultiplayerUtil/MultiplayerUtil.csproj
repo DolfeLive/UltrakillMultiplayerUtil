@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<FileAlignment>4096</FileAlignment>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Facepunch.Steamworks.Win64">
+	    <HintPath>..\..\..\Documents\unity\MultiplayerUtil\Assets\Plugins\Facepunch.Steamworks.Win64.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine">
+	    <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.29f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.29f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.PhysicsModule">
+	    <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.29f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.UIModule">
+	    <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.29f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+<!--
+	<ItemGroup>
+		<Reference Include="0Harmony">
+			<HintPath>UltrakillDeps\0Harmony.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp">
+			<HintPath>UltrakillDeps\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx">
+			<HintPath>UltrakillDeps\BepInEx.dll</HintPath>
+		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win64">
+			<HintPath>UltrakillDeps\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>..\..\_UltrakillDeps\Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="plog">
+			<HintPath>UltrakillDeps\plog.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Addressables">
+			<HintPath>UltrakillDeps\Unity.Addressables.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.ResourceManager">
+			<HintPath>UltrakillDeps\Unity.ResourceManager.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro">
+			<HintPath>UltrakillDeps\Unity.TextMeshPro.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine">
+			<HintPath>UltrakillDeps\UnityEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.AssetBundleModule">
+			<HintPath>UltrakillDeps\UnityEngine.AssetBundleModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>UltrakillDeps\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.InputLegacyModule">
+			<HintPath>UltrakillDeps\UnityEngine.InputLegacyModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.JSONSerializeModule">
+			<HintPath>UltrakillDeps\UnityEngine.JSONSerializeModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.PhysicsModule">
+			<HintPath>UltrakillDeps\UnityEngine.PhysicsModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>UltrakillDeps\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UIElementsModule">
+			<HintPath>UltrakillDeps\UnityEngine.UIElementsModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UIModule">
+			<HintPath>UltrakillDeps\UnityEngine.UIModule.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="Build" Condition="'$(GITHUB_ACTIONS)' != 'true'">
+		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFiles="$(UltrakillPath)\MultiplayerUtil.dll" />
+		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.dll" />
+		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.xml" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.xml" />
+	</Target>
+-->
+	<Target Name="PostBuild" AfterTargets="Build">
+		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFolder="C:\Users\dolfelive\Documents\unity\MultiplayerUtil\Assets\Plugins" />
+	</Target>
+</Project>
+

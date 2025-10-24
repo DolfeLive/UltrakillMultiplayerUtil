@@ -1,0 +1,157 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+ 
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+
+
+jobs:
+  build:
+    runs-on: self-hosted
+    
+    permissions:
+      contents: write
+      issues: write
+      deployments: write
+      pull-requests: write
+    
+    env:
+     DOTNET_INSTALL_DIR: "$HOME/.dotnet"
+    
+    steps: 
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        installation-path: $HOME/.dotnet
+        
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore --output publish_output
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    
+    - name: Upload published artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: published-app
+        path: publish_output
+
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          This build was automated with GitHub Actions.
+          Commit message: ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload DLL to Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./publish_output/MultiplayerUtil.dll
+        asset_name: MultiplayerUtil.dll
+        asset_content_type: application/octet-stream
+     
+    - name: Upload XML to Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./publish_output/MultiplayerUtil.xml
+        asset_name: MultiplayerUtil.xml
+        asset_content_type: text/xml
+
+        
+  fallback:
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+
+    permissions:
+      contents: write
+      issues: write
+      deployments: write
+      pull-requests: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore --output publish_output
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    
+    - name: Upload published artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: published-app
+        path: publish_output
+
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          This build was automated with GitHub Actions.
+          Commit message: ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload DLL to Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./publish_output/MultiplayerUtil.dll
+        asset_name: MultiplayerUtil.dll
+        asset_content_type: application/octet-stream
+     
+    - name: Upload XML to Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./publish_output/MultiplayerUtil.xml
+        asset_name: MultiplayerUtil.xml
+        asset_content_type: text/xml
