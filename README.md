@@ -44,8 +44,9 @@ Add documentation for current_lobby
 
 * Unity Engine
 * A /Plugins dir in the unity project
-* Facepunch.Steamworks.Win64.dll in the /Plugins dir as well as Newtonsoft.Json.dll
-* a /x86_64 dir in the /Plugins dir and steam_api64.dll to be in that
+* [Facepunch.Steamworks.Win64.dll](https://github.com/Facepunch/Facepunch.Steamworks/releases) in the /Plugins dir
+* a /x86_64 dir in the /Plugins dir and [steam_api64.dll](https://partner.steamgames.com/downloads/list) (**Version 1.61**) to be in that
+* Newtonsoft Json package installed (Window -> Package Manager, Click the + -> Add package by name. Then put in 'com.unity.nuget.newtonsoft-json')
 
 ### Installation
 
