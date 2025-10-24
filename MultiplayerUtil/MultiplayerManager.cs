@@ -717,14 +717,15 @@ public class SteamManager : MonoBehaviour
     {
         if (isLobbyOwner)
         {
-            if (server.besties.Count > 0)
+            if (server?.besties?.Count > 0)
             {
                 foreach (var item in server.besties)
                 {
-                    SteamNetworking.CloseP2PSessionWithUser(item);
+                    if (item != null)
+                        SteamNetworking.CloseP2PSessionWithUser(item);
                 }
                 
-                if (current_lobby.Value is Lobby lobby)
+                if (current_lobby != null && current_lobby.Value is Lobby lobby)
                 {
                     Friend thatMember = lobby.Members.FirstOrDefault(_ => _.Id == server.besties[0].Value);
                     lobby.SendChatString($"||| Setting Lobby Owner To: {thatMember.Name}");
@@ -737,9 +738,12 @@ public class SteamManager : MonoBehaviour
         }
         else
         {
-            foreach (var item in client.connectedPeers)
+            if (client?.connectedPeers != null)
             {
-                SteamNetworking.CloseP2PSessionWithUser(item);
+                foreach (var item in client.connectedPeers)
+                {
+                    SteamNetworking.CloseP2PSessionWithUser(item);
+                }
             }
         }
         current_lobby?.Leave();
