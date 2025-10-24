@@ -35,7 +35,6 @@
 ```
 Set lobby settings method
 Add documentation for current_lobby
-
 ```
 ---
 
@@ -43,14 +42,15 @@ Add documentation for current_lobby
 
 ### Prerequisites
 
-* **ULTRAKILL** installed via Steam.
-* BepInEx (x64) installed and functioning.
-* Your project or mod should reference `MultiplayerUtil.dll`.
+* Unity Engine
+* A /Plugins dir in the unity project
+* Facepunch.Steamworks.Win64.dll in the /Plugins dir as well as Newtonsoft.Json.dll
+* a /x86_64 dir in the /Plugins dir and steam_api64.dll to be in that
 
 ### Installation
 
-1. Place `MultiplayerUtil.dll` in the `BepInEx/plugins/` directory.
-2. Ensure that any mod using this utility declares it as a dependency.
+1. Place `MultiplayerUtil.dll` in the `Plugins/` directory.
+2. Add SteamManager to a object in the scene
 3. Hook into `MultiplayerUtil.Callbacks.StartupComplete` before invoking any Steam functionality.
 
 ---
@@ -61,7 +61,7 @@ You can easily manage Steam lobbies via static methods under `MultiplayerUtil.Lo
 
 ```csharp
 // Create a new public lobby for 4 players
-MU.LobbyManager.CreateLobby(
+LobbyManager.CreateLobby(
     lobbyName: "New lobby",
     maxPlayers: 4,
     publicLobby: true,
