@@ -14,8 +14,6 @@ public class _MultiplayerUtil : BaseUnityPlugin
     {
         instance = this;
         
-        Semtings.Init();
-
         Harmony har = new Harmony("DolfeLive.Modding.MultiplayerUtil");
         har.PatchAll();
 
@@ -33,7 +31,7 @@ public class _MultiplayerUtil : BaseUnityPlugin
 
 
     }
-
+    
     void Update()
     {
         SteamClient.RunCallbacks();

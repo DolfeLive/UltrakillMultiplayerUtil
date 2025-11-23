@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System.IO.Compression;
+using Newtonsoft.Json;
 using System.Text;
+using ProtoBuf;
 
 namespace MultiplayerUtil;
 
@@ -16,8 +18,11 @@ public static class Data
 
         try
         {
-            var json = Encoding.UTF8.GetString(serializedData);
-            return JsonConvert.DeserializeObject<T>(json);
+            //var json = Encoding.UTF8.GetString(serializedData);
+            //return JsonConvert.DeserializeObject<T>(json);
+            
+            using var ms = new MemoryStream(serializedData);
+            return Serializer.Deserialize<T>(ms);
         }
         catch (Exception ex)
         {
@@ -36,8 +41,12 @@ public static class Data
 
         try
         {
-            var json = Encoding.UTF8.GetString(serializedData);
-            result = JsonConvert.DeserializeObject<T>(json);
+            //var json = Encoding.UTF8.GetString(serializedData);
+            //result = JsonConvert.DeserializeObject<T>(json);
+            
+            using var ms = new MemoryStream(serializedData);
+            result = Serializer.Deserialize<T>(ms);
+            
             return true;
         }
         catch (Exception ex)
@@ -57,8 +66,11 @@ public static class Data
 
         try
         {
-            var json = JsonConvert.SerializeObject(data);
-            return Encoding.UTF8.GetBytes(json);
+            using var ms = new MemoryStream();
+            Serializer.Serialize(ms, data);
+            return ms.ToArray();
+            //var json = JsonConvert.SerializeObject(data);
+            //return Encoding.UTF8.GetBytes(json);
         }
         catch (Exception ex)
         {

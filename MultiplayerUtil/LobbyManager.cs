@@ -1,4 +1,5 @@
-﻿ 
+﻿using Steamworks;
+
 namespace MultiplayerUtil;
 
 public static class LobbyManager
@@ -64,7 +65,7 @@ public static class LobbyManager
         Clogger.Log("Creating Lobby");
         SteamManager.instance.HostLobby(lobbyName, maxPlayers, publicLobby, cracked, mods, modIdentifier);
     }
-
+    
     /// <summary>
     /// returns a list of all lobbies matching your mods lobby identifier
     /// </summary>

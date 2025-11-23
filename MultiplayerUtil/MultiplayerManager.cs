@@ -8,8 +8,7 @@ namespace MultiplayerUtil;
 public class SteamManager : MonoBehaviour
 {
     public static SteamManager instance;
-
-
+    
     public const float importantUpdatesASec = 33.3f;
     public const float unimportantUpdatesAMin = 12;
     public static string p2pEstablishMessage = "IWouldLikeToEstablishP2P!";
@@ -427,7 +426,6 @@ public class SteamManager : MonoBehaviour
             {
                 if (current_lobby == null)
                 {
-
                     yield return new WaitForSeconds(5f);
                     if (current_lobby == null)
                     {
@@ -435,23 +433,21 @@ public class SteamManager : MonoBehaviour
                         yield break;
                     }
                     print("everything was fine");
-
                 }
 
                 Callbacks.TimeToSendImportantData?.Invoke();
 
-                if (isLobbyOwner)
-                {
-                    unimportantTimeElapsed += interval;
+                
+                unimportantTimeElapsed += interval;
 
-                    if (unimportantTimeElapsed >= unimportantInterval)
-                    {
-                        Clogger.UselessLog("TimeToSendUnimportantData invoked");
-                        Callbacks.TimeToSendUnimportantData?.Invoke();
-                        current_lobby?.SetData("members", $"{current_lobby?.Members.Count()}/{maxPlayers}");
-                        unimportantTimeElapsed = 0f;
-                    }
+                if (unimportantTimeElapsed >= unimportantInterval)
+                {
+                    Clogger.UselessLog("TimeToSendUnimportantData invoked");
+                    Callbacks.TimeToSendUnimportantData?.Invoke();
+                    current_lobby?.SetData("members", $"{current_lobby?.Members.Count()}/{maxPlayers}");
+                    unimportantTimeElapsed = 0f;
                 }
+            
 
                 if (current_lobby == null)
                 {
@@ -649,13 +645,13 @@ public class SteamManager : MonoBehaviour
                 Clogger.ExtraLog($"Lobby join Success: {result}");
                 isLobbyOwner = false;
                 current_lobby = lob;
-
+                
                 client = new Client.Client();
             }
             else
             {
                 current_lobby = null;
-                isLobbyOwner= false;
+                isLobbyOwner = false;
                 client = null;
 
                 Clogger.LogWarning($"Couldn't join the lobby. Result is {result}");
@@ -763,128 +759,7 @@ public class SteamManager : MonoBehaviour
     {
         Disconnect();
     }
-
 }
-
-
-public static class Callbacks
-{
-    public class SenderUnityEvent : UnityEvent<(byte[], SteamId?)> { }
-
-    /// <summary>
-    /// Invoked when a P2P message is received. The message object is already deserialized.
-    /// </summary>
-    public static SenderUnityEvent p2pMessageReceived = new SenderUnityEvent();
-
-    /// <summary>
-    /// Invoked at the regular update interval for sending important data.
-    /// </summary>
-    public static UnityEvent TimeToSendImportantData = new UnityEvent();
-
-    /// <summary>
-    /// Invoked during unimportant update cycles for sending less critical data.
-    /// </summary>
-    public static UnityEvent TimeToSendUnimportantData = new UnityEvent();
-
-    /// <summary>
-    /// Invoked when the SteamManager is fully initialized and ready for use.
-    /// Make sure to call Steam-dependent methods only after this event fires.
-    /// </summary>
-    public static UnityEvent StartupComplete = new UnityEvent();
-
-    /// <summary>
-    /// Invoked when a member joins the Steam lobby. P2P setup is handled automatically.
-    /// </summary>
-    public static UnityEvent<Lobby, Friend> OnLobbyMemberJoined = new UnityEvent<Lobby, Friend>();
-
-    /// <summary>
-    /// Invoked when a member leaves the Steam lobby.
-    /// </summary>
-    public static UnityEvent<SteamId> OnLobbyMemberLeave = new UnityEvent<SteamId>();
-
-    /// <summary>
-    /// Invoked when a chat message is received in the lobby.
-    /// </summary>
-    public static UnityEvent<Lobby, Friend, string> OnChatMessageReceived = new UnityEvent<Lobby, Friend, string>();
-
-/*    /// <summary>
-    /// Invoked when another user attempts to start a P2P session with the local user.
-    /// </summary>
-    public static UnityEvent<SteamId> OnP2PSessionRequest = new UnityEvent<SteamId>();*/
-
-    /// <summary>
-    /// Invoked when a P2P connection attempt fails with a specific user.
-    /// </summary>
-    public static UnityEvent<SteamId, P2PSessionError> OnP2PConnectionFailed = new UnityEvent<SteamId, P2PSessionError>();
-
-    /// <summary>
-    /// Invoked when a lobby member is banned.
-    /// </summary>
-    public static UnityEvent<SteamId> OnLobbyMemberBanned = new UnityEvent<SteamId>();
-
-    /// <summary>
-    /// Invoked when the local user successfully enters a lobby.
-    /// </summary>
-    public static UnityEvent<Lobby> OnLobbyEntered = new UnityEvent<Lobby>();
-
-    /// <summary>
-    /// Invoked when a lobby is successfully created by the local user.
-    /// </summary>
-    public static UnityEvent<Lobby> OnLobbyCreated = new UnityEvent<Lobby>();
-
-    public static Action OnSteamShutdown = delegate { };
-}
-
-// Wrapper so i can handle multiple classes
-[System.Serializable]
-public class NetworkWrapper
-{
-    public string ClassType { get; set; }
-    public byte[] ClassData { get; set; }
-}
-
-// this system will allow users to subscribe with their class to notifications of when the specific class they are looking for is detected
-public static class ObserveManager
-{
-    public static bool MessageReceivedLogging = false;
-    public static Dictionary<Type, Callbacks.SenderUnityEvent> subscribedEvents = new();
-
-    public static void SubscribeToType(Type classType, out Callbacks.
-        SenderUnityEvent whenDetected)
-    {
-        Callbacks.SenderUnityEvent whenDetectedAction = new();
-
-        subscribedEvents.Add(classType, whenDetectedAction);
-
-        whenDetected = whenDetectedAction;
-    }
-
-    public static void OnMessageRecived(byte[] message, SteamId? sender)
-    {
-
-        NetworkWrapper recivedData = null;
-        try
-        {
-            recivedData = Data.Deserialize<NetworkWrapper>(message);
-        }
-        catch (InvalidCastException e)
-        {
-            Logger.LogWarning($"Failed to cast p2p message, sender: {sender}, message len: {message.Length}");
-            return;
-        }
-
-        if (MessageReceivedLogging)
-            Clogger.Log($"Recived p2p message, sender: {sender}, type: {recivedData.ClassType}, data: {recivedData.ClassData}");
-
-        Type type = Type.GetType(recivedData.ClassType);
-        if (type != null && ObserveManager.subscribedEvents.TryGetValue(type, out Callbacks.SenderUnityEvent notifier))
-        {
-            notifier.Invoke((recivedData.ClassData, sender));
-        }
-    }
-
-}
-
 
 public enum AuthoritativeTypes
 {

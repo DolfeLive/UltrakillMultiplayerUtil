@@ -39,7 +39,7 @@ class ExampleClass1 : BaseUnityPlugin
 
         MU.Callbacks.TimeToSendUnimportantData.AddListener(() =>  // UnimportantData Runs less than important (x times a seconds), use for things like leaderboards, unimportant is only ran if you are the lobby owner
         {
-            // if (!MU.LobbyManager.isLobbyOwner) return; // Only run if lobby owner // only do this if its owner only stuff
+            // if (!MU.LobbyManager.isLobbyOwner) return; // Only run if lobby owner
 
             try
             {

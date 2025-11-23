@@ -10,7 +10,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-	<UltrakillPath>C:\Program Files (x86)\Steam\steamapps\common\ULTRAKILL\BepInEx\plugins\</UltrakillPath>
+	<UltrakillPath>/home/dolfe/.local/share/Steam/steamapps/common/ULTRAKILL/BepInEx/plugins/</UltrakillPath>
   </PropertyGroup>
 	
   <ItemGroup>
@@ -19,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="protobuf-net" Version="3.2.56" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,8 +81,8 @@
 
 	<Target Name="PostBuild" AfterTargets="Build" Condition="'$(GITHUB_ACTIONS)' != 'true'">
 		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFiles="$(UltrakillPath)\MultiplayerUtil.dll" />
-		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.dll" />
-		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.xml" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.xml" />
+		<!--<Copy SourceFiles="$(TargetDir)MultiplayerUtil.dll" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.dll" />
+		<Copy SourceFiles="$(TargetDir)MultiplayerUtil.xml" DestinationFiles="C:\UltrakillDeps\MultiplayerUtil.xml" />-->
 	</Target>
 
 
